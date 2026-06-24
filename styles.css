@@ -198,6 +198,42 @@ label {
   font-size: 13px;
 }
 
+.field-block {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.field-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.inline-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+label > span[data-tooltip],
+.field-label-row > span[data-tooltip],
+.inline-check span[data-tooltip],
+.line-header span[data-tooltip] {
+  width: fit-content;
+  cursor: help;
+  text-decoration: underline dotted rgba(100, 113, 125, 0.65);
+  text-underline-offset: 3px;
+}
+
 input {
   width: 100%;
   min-width: 0;
@@ -212,6 +248,37 @@ input {
 input:focus {
   outline: 2px solid rgba(15, 118, 110, 0.22);
   border-color: var(--primary);
+}
+
+input:disabled {
+  background: var(--surface-soft);
+  color: #87929d;
+  cursor: not-allowed;
+}
+
+.is-disabled {
+  color: #87929d;
+}
+
+.is-disabled span,
+.is-disabled input {
+  opacity: 0.78;
+}
+
+.inline-check input[type="checkbox"] {
+  width: 16px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0;
+}
+
+.line-may-include {
+  display: grid;
+  gap: 5px;
+}
+
+.line-may-include .inline-check {
+  justify-self: start;
 }
 
 .actions {
@@ -402,6 +469,24 @@ input:focus {
   margin: 0;
   line-height: 1.7;
   color: #33404c;
+}
+
+.floating-tooltip {
+  position: fixed;
+  z-index: 100;
+  max-width: min(320px, calc(100vw - 24px));
+  padding: 9px 10px;
+  border-radius: 6px;
+  background: #16202a;
+  color: #fff;
+  box-shadow: var(--shadow);
+  font-size: 12px;
+  line-height: 1.5;
+  pointer-events: none;
+}
+
+.floating-tooltip[hidden] {
+  display: none;
 }
 
 @media (max-width: 1120px) {

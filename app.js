@@ -49,6 +49,7 @@ const I18N = {
     "guide.requireAll": "单人榜 b 的“必须包含”最常见用途是控制生日、纪念日、名字谐音或你一定想展示的数字。比如填 123，最终 b 就必须完整出现 123。",
     "guide.defaults": "大多数参数第一次可以先用默认：搜索窗口、综合评分阈值、每档候选数和结果数都不用急着改。没结果时先加大搜索窗口；结果太多时提高阈值或减少结果数。",
     "guide.candidates": "候选数会影响“找得多不多”。候选数/每个 b 候选数越大，越可能看到更多备选，但多榜组合会明显变慢；结果数主要影响最后展示多少条，调大只是让列表更长。",
+    "guide.mobileTooltip": "移动端没有鼠标悬停，可以点按输入框标题查看说明和示例；点页面其它位置会收起提示。",
     "guide.performance": "如果 3 个以上 b 没有锁定，页面会先提醒你，因为组合数会快速膨胀。这个版本会自动收紧候选上限，后续再考虑更强的算法。",
     "label.aCurrent": "当前总榜 a",
     "label.bCurrent": "当前单榜 b",
@@ -57,6 +58,7 @@ const I18N = {
     "label.exact": "全字匹配",
     "label.requireAll": "必须包含",
     "label.mayInclude": "可以包含",
+    "label.requireAnyHard": "至少一个",
     "label.exclude": "必须排除",
     "label.scoreThreshold": "综合评分阈值",
     "label.resultLimit": "每档候选数",
@@ -93,26 +95,20 @@ const I18N = {
     "status.cancelled": "已取消",
     "status.combining": "组合 {count} 组",
     "status.multiDone": "完成 {count} 组",
-    "placeholder.bExact": "6001234",
-    "placeholder.aExact": "53012345",
-    "placeholder.exclude": "4,74",
-    "placeholder.requireAll": "666,888",
-    "placeholder.aMayInclude": "1221,3443,1314",
-    "placeholder.aExclude": "74",
-    "placeholder.multiAExact": "50012345",
     "tip.aCurrent": "填现在看到的总榜分。单榜模式会用它和 b 的差值推算打完后的总榜。",
     "tip.bCurrent": "填当前要控的单人榜分。一般就是最后还没结算的章节分。",
     "tip.targetIncrements": "计划至少再打多少分。默认多档一起看，先不用改。",
     "tip.searchWindow": "从增量下限往上找多远。默认通常够用；没结果再加大，越大越慢。",
-    "tip.singleBExact": "已经确定最终单人榜分就填这里；适合章节已结束或只想验证某个分数。",
-    "tip.singleAExact": "只想要某个总榜分就填这里；普通试算可以留空。",
-    "tip.multiAExact": "只接受某个总榜分时填写；普通多榜规划可以留空。",
+    "tip.singleBExact": "已经确定最终单人榜分就填这里；适合章节已结束或只想验证某个分数。例：6001234。",
+    "tip.singleAExact": "只想要某个总榜分就填这里；普通试算可以留空。例：53012345。",
+    "tip.multiAExact": "只接受某个总榜分时填写；普通多榜规划可以留空。例：50012345。",
     "tip.requireAll": "所有填入的数字串都必须完整出现。",
-    "tip.bRequireAll": "单人榜 b 常用来控生日、纪念日或必须出现的数字；填了就一定要出现在最终分。",
-    "tip.aRequireAll": "总榜 a 如果一定要出现某串数字才填；普通试算可以留空。",
+    "tip.bRequireAll": "单人榜 b 常用来控生日、纪念日或必须出现的数字；填了就一定要出现在最终分。例：123。",
+    "tip.aRequireAll": "总榜 a 如果一定要出现某串数字才填；普通试算可以留空。例：666,888。",
     "tip.lineRequireAll": "这个章节最终分必须出现的数字，常用于控制生日、纪念日或固定展示数字。",
-    "tip.mayInclude": "放想要出现的好看数字。每组命中一个即可；多组可用分号或换行分开。",
-    "tip.exclude": "不想看到的数字填这里，比如忌讳数字或不喜欢的组合。",
+    "tip.mayInclude": "放想要出现的好看数字；不勾选“至少一个”时不会卡掉结果。多组可用分号或换行分开。例：1221,3443,1314。",
+    "tip.requireAnyHard": "勾选后，“可以包含”会变成硬规则：每组至少命中一个。不勾选时只作为偏好和评价线索。",
+    "tip.exclude": "不想看到的数字填这里，比如忌讳数字或不喜欢的组合。例：4,74。",
     "tip.scoreThreshold": "建议先用默认。调高会只看更靓的分，调低会显示更多普通候选。",
     "tip.resultLimit": "建议先用默认。调大能看更多备选，页面更长；调小更清爽但选择更少。",
     "tip.maxCandidates": "多榜建议先用默认。调大会让组合数暴涨，只在想深挖时再加。",
@@ -126,6 +122,7 @@ const I18N = {
     "rule.exact": "全字匹配：{patterns}",
     "rule.requireAll": "必须包含：{patterns}",
     "rule.mayInclude": "可以包含：{patterns}",
+    "rule.mayIncludeRequired": "可以包含（至少一个）：{patterns}",
     "rule.exclude": "必须排除：{patterns}",
     "rule.none": "无额外限制",
     "reason.contains": "包含 {pattern}（+{points}）",
@@ -185,6 +182,7 @@ const I18N = {
     "guide.requireAll": "For single b, Must contain is usually for birthdays, anniversaries, name puns, or any digits you definitely want shown. For example, 123 means the final b must contain 123 exactly.",
     "guide.defaults": "Most settings can stay at their defaults on the first run: search window, score threshold, candidates per tier, and result count. If nothing appears, increase the search window; if too much appears, raise the threshold or show fewer results.",
     "guide.candidates": "Candidate limits control how much the tool explores. Larger candidates-per-tier or candidates-per-b values can reveal more options, but multi-score combinations get slower quickly. Result count mostly changes how many final rows are displayed.",
+    "guide.mobileTooltip": "On mobile, tap a field label to open its tooltip with notes and examples; tap elsewhere to close it.",
     "guide.performance": "If 3 or more b values are unlocked, the page warns you because combinations can explode. This version automatically tightens candidate limits; stronger search can be added later.",
     "label.aCurrent": "Current total a",
     "label.bCurrent": "Current b",
@@ -193,6 +191,7 @@ const I18N = {
     "label.exact": "Exact match",
     "label.requireAll": "Must contain",
     "label.mayInclude": "May include",
+    "label.requireAnyHard": "At least one",
     "label.exclude": "Must exclude",
     "label.scoreThreshold": "Score threshold",
     "label.resultLimit": "Candidates per tier",
@@ -229,26 +228,20 @@ const I18N = {
     "status.cancelled": "Cancelled",
     "status.combining": "Combining {count} groups",
     "status.multiDone": "Done: {count} group(s)",
-    "placeholder.bExact": "6001234",
-    "placeholder.aExact": "53012345",
-    "placeholder.exclude": "4,74",
-    "placeholder.requireAll": "666,888",
-    "placeholder.aMayInclude": "1221,3443,1314",
-    "placeholder.aExclude": "74",
-    "placeholder.multiAExact": "50012345",
     "tip.aCurrent": "Enter the total score you see now. Single mode uses it with b to keep a-b unchanged.",
     "tip.bCurrent": "Enter the current chapter ranking score you are controlling.",
     "tip.targetIncrements": "Planned minimum points to add. Keep the default tiers for a first pass.",
     "tip.searchWindow": "How far upward to search from the minimum increment. Defaults are usually enough; larger is slower.",
-    "tip.singleBExact": "Enter a final b only when the chapter ended or you want to check one exact score.",
-    "tip.singleAExact": "Enter this only when you need one exact total score; leave it blank for normal trials.",
-    "tip.multiAExact": "Enter this only when the final total a must be exact; leave it blank for normal planning.",
+    "tip.singleBExact": "Enter a final b only when the chapter ended or you want to check one exact score. Example: 6001234.",
+    "tip.singleAExact": "Enter this only when you need one exact total score; leave it blank for normal trials. Example: 53012345.",
+    "tip.multiAExact": "Enter this only when the final total a must be exact; leave it blank for normal planning. Example: 50012345.",
     "tip.requireAll": "Every listed digit string must appear exactly.",
-    "tip.bRequireAll": "For single b, use this for birthdays, anniversaries, or digits that must appear in the final score.",
-    "tip.aRequireAll": "Use this only when total a must contain a specific digit string; leave blank for normal trials.",
+    "tip.bRequireAll": "For single b, use this for birthdays, anniversaries, or digits that must appear in the final score. Example: 123.",
+    "tip.aRequireAll": "Use this only when total a must contain a specific digit string; leave blank for normal trials. Example: 666,888.",
     "tip.lineRequireAll": "Digits this chapter's final score must contain, often for birthdays, anniversaries, or fixed display digits.",
-    "tip.mayInclude": "Optional preferred digits. One item per group may match; separate groups with semicolons or new lines.",
-    "tip.exclude": "Digits you do not want to see, such as disliked or unlucky combinations.",
+    "tip.mayInclude": "Optional preferred digits. They do not block results unless At least one is checked. Separate groups with semicolons or new lines. Example: 1221,3443,1314.",
+    "tip.requireAnyHard": "When checked, May include becomes a hard rule: each group must match at least one item. When unchecked, it is only a preference and scoring hint.",
+    "tip.exclude": "Digits you do not want to see, such as disliked or unlucky combinations. Example: 4,74.",
     "tip.scoreThreshold": "Keep the default first. Higher hides ordinary results; lower shows more candidates.",
     "tip.resultLimit": "Keep the default first. Larger shows more choices; smaller keeps the page cleaner.",
     "tip.maxCandidates": "For multi mode, keep the default first. Raising it can make combinations grow very fast.",
@@ -262,6 +255,7 @@ const I18N = {
     "rule.exact": "Exact match: {patterns}",
     "rule.requireAll": "Must contain: {patterns}",
     "rule.mayInclude": "May include: {patterns}",
+    "rule.mayIncludeRequired": "May include (at least one): {patterns}",
     "rule.exclude": "Must exclude: {patterns}",
     "rule.none": "No extra rules",
     "reason.contains": "Contains {pattern} (+{points})",
@@ -308,9 +302,12 @@ let lastMultiPlans = null;
 const waitForFrame = () => new Promise((resolve) => requestAnimationFrame(resolve));
 
 class DigitRule {
-  constructor({ exact = [], requireAll = [], requireAnyGroups = [], exclude = [] } = {}) {
+  constructor({ exact = [], requireAll = [], includeGroups = [], requireAnyGroups = [], exclude = [] } = {}) {
     this.exact = normalizePatterns(exact);
     this.requireAll = normalizePatterns(requireAll);
+    this.includeGroups = (includeGroups.length ? includeGroups : requireAnyGroups)
+      .map((group) => normalizePatterns(group))
+      .filter((group) => group.length > 0);
     this.requireAnyGroups = requireAnyGroups
       .map((group) => normalizePatterns(group))
       .filter((group) => group.length > 0);
@@ -348,8 +345,11 @@ class DigitRule {
       parts.push(t("rule.requireAll", { patterns: this.requireAll.join(", ") }));
     }
 
-    for (const group of this.requireAnyGroups) {
-      parts.push(t("rule.mayInclude", { patterns: group.join(", ") }));
+    for (const group of this.includeGroups) {
+      const required = this.requireAnyGroups.some((requiredGroup) =>
+        requiredGroup.length === group.length && requiredGroup.every((pattern, index) => pattern === group[index]),
+      );
+      parts.push(t(required ? "rule.mayIncludeRequired" : "rule.mayInclude", { patterns: group.join(", ") }));
     }
 
     if (this.exclude.length) {
@@ -426,12 +426,79 @@ function exactNumbers(rule, label) {
 }
 
 function buildRule(prefix, source) {
+  const includeGroups = parsePatternGroups(source.get(`${prefix}RequireAny`) ?? "");
+  const requireAnyHard = source.get(`${prefix}RequireAnyHard`) === "on";
+
   return new DigitRule({
     exact: parsePatternList(source.get(`${prefix}Exact`) ?? ""),
     requireAll: parsePatternList(source.get(`${prefix}RequireAll`) ?? ""),
-    requireAnyGroups: parsePatternGroups(source.get(`${prefix}RequireAny`) ?? ""),
+    includeGroups,
+    requireAnyGroups: requireAnyHard ? includeGroups : [],
     exclude: parsePatternList(source.get(`${prefix}Exclude`) ?? ""),
   });
+}
+
+function fieldShell(input) {
+  return input.closest(".field-block") || input.closest("label") || input.closest(".line-may-include");
+}
+
+function setFieldDisabled(input, disabled) {
+  input.disabled = disabled;
+  input.setAttribute("aria-disabled", String(disabled));
+
+  const shell = fieldShell(input);
+  if (shell) {
+    shell.classList.toggle("is-disabled", disabled);
+  }
+}
+
+function syncLockGroup(container, exactName, dependentNames) {
+  const exactInput = container.querySelector(`[name="${exactName}"]`);
+  if (!exactInput) {
+    return;
+  }
+
+  const locked = exactInput.value.trim() !== "";
+  for (const name of dependentNames) {
+    const input = container.querySelector(`[name="${name}"]`);
+    if (input) {
+      setFieldDisabled(input, locked);
+    }
+  }
+}
+
+function syncSingleLockStates() {
+  const form = document.querySelector("#single-form");
+  syncLockGroup(form, "bExact", ["bRequireAll", "bRequireAny", "bRequireAnyHard", "bExclude"]);
+  syncLockGroup(form, "aExact", ["aRequireAll", "aRequireAny", "aRequireAnyHard", "aExclude"]);
+}
+
+function syncMultiTotalLockState() {
+  const form = document.querySelector("#multi-form");
+  syncLockGroup(form, "multiAExact", [
+    "multiARequireAll",
+    "multiARequireAny",
+    "multiARequireAnyHard",
+    "multiAExclude",
+  ]);
+}
+
+function syncLineRowLockState(row) {
+  syncLockGroup(row, "exact", [
+    "current",
+    "minIncrement",
+    "searchWindow",
+    "requireAll",
+    "requireAny",
+    "requireAnyHard",
+    "exclude",
+  ]);
+}
+
+function syncLockStates() {
+  syncSingleLockStates();
+  syncMultiTotalLockState();
+  document.querySelectorAll("#line-rows .line-row").forEach(syncLineRowLockState);
 }
 
 function findRepeatedRuns(text, minLength = 2) {
@@ -528,7 +595,7 @@ function matchedRulePatterns(value, rule) {
     add(pattern);
   }
 
-  for (const group of rule.requireAnyGroups) {
+  for (const group of rule.includeGroups) {
     for (const pattern of group) {
       add(pattern);
     }
@@ -867,6 +934,11 @@ function renderError(selector, message) {
 }
 
 function lineRowValues(row) {
+  const exact = parsePatternList(row.querySelector('[name="exact"]').value);
+  const locked = exact.length > 0;
+  const includeGroups = locked ? [] : parsePatternGroups(row.querySelector('[name="requireAny"]').value);
+  const requireAnyHard = !locked && row.querySelector('[name="requireAnyHard"]').checked;
+
   return {
     name: row.querySelector('[name="name"]').value.trim() || "b",
     current: parseNumber(row.querySelector('[name="current"]').value, t("line.current"), {
@@ -880,10 +952,11 @@ function lineRowValues(row) {
       max: 5000000,
     }),
     rule: new DigitRule({
-      exact: parsePatternList(row.querySelector('[name="exact"]').value),
-      requireAll: parsePatternList(row.querySelector('[name="requireAll"]').value),
-      requireAnyGroups: parsePatternGroups(row.querySelector('[name="requireAny"]').value),
-      exclude: parsePatternList(row.querySelector('[name="exclude"]').value),
+      exact,
+      requireAll: locked ? [] : parsePatternList(row.querySelector('[name="requireAll"]').value),
+      includeGroups,
+      requireAnyGroups: requireAnyHard ? includeGroups : [],
+      exclude: locked ? [] : parsePatternList(row.querySelector('[name="exclude"]').value),
     }),
   };
 }
@@ -1156,6 +1229,7 @@ function addLineRow(values = {}) {
     exact: "",
     requireAll: "",
     requireAny: "",
+    requireAnyHard: false,
     exclude: "",
     ...values,
   };
@@ -1163,7 +1237,11 @@ function addLineRow(values = {}) {
   for (const [name, value] of Object.entries(defaults)) {
     const input = row.querySelector(`[name="${name}"]`);
     if (input) {
-      input.value = value;
+      if (input.type === "checkbox") {
+        input.checked = Boolean(value);
+      } else {
+        input.value = value;
+      }
     }
   }
 
@@ -1173,6 +1251,7 @@ function addLineRow(values = {}) {
 
   rows.append(row);
   applyLocalizedAttributes(row);
+  syncLineRowLockState(row);
 }
 
 function resetMultiRows() {
@@ -1193,6 +1272,49 @@ function resetMultiRows() {
     searchWindow: 100000,
     requireAll: "",
     requireAny: "",
+  });
+}
+
+function bindLockStateControls() {
+  const singleForm = document.querySelector("#single-form");
+  const multiForm = document.querySelector("#multi-form");
+  const lineRows = document.querySelector("#line-rows");
+
+  singleForm.addEventListener("input", (event) => {
+    if (event.target instanceof HTMLInputElement && ["bExact", "aExact"].includes(event.target.name)) {
+      syncSingleLockStates();
+    }
+  });
+
+  singleForm.addEventListener("reset", () => {
+    setTimeout(syncSingleLockStates, 0);
+  });
+
+  multiForm.addEventListener("input", (event) => {
+    if (!(event.target instanceof HTMLInputElement)) {
+      return;
+    }
+
+    if (event.target.name === "multiAExact") {
+      syncMultiTotalLockState();
+      return;
+    }
+
+    if (event.target.name === "exact") {
+      const row = event.target.closest(".line-row");
+      if (row) {
+        syncLineRowLockState(row);
+      }
+    }
+  });
+
+  lineRows.addEventListener("input", (event) => {
+    if (event.target instanceof HTMLInputElement && event.target.name === "exact") {
+      const row = event.target.closest(".line-row");
+      if (row) {
+        syncLineRowLockState(row);
+      }
+    }
   });
 }
 
@@ -1236,10 +1358,6 @@ function applyLocalizedAttributes(root = document) {
     }
   });
 
-  root.querySelectorAll("[data-placeholder]").forEach((element) => {
-    element.placeholder = t(element.dataset.placeholder);
-  });
-
   root.querySelectorAll("[data-aria-label]").forEach((element) => {
     element.setAttribute("aria-label", t(element.dataset.ariaLabel));
   });
@@ -1253,7 +1371,78 @@ function applyLocalizedAttributes(root = document) {
   });
 }
 
+function tooltipElement() {
+  let element = document.querySelector(".floating-tooltip");
+
+  if (!element) {
+    element = document.createElement("div");
+    element.className = "floating-tooltip";
+    element.hidden = true;
+    element.setAttribute("role", "tooltip");
+    document.body.append(element);
+  }
+
+  return element;
+}
+
+function hideTapTooltip() {
+  const element = document.querySelector(".floating-tooltip");
+  if (element) {
+    element.hidden = true;
+  }
+}
+
+function showTapTooltip(trigger) {
+  const tooltip = tooltipElement();
+  tooltip.textContent = t(trigger.dataset.tooltip);
+  tooltip.hidden = false;
+
+  const margin = 12;
+  const rect = trigger.getBoundingClientRect();
+  const tooltipRect = tooltip.getBoundingClientRect();
+  const maxLeft = window.innerWidth - tooltipRect.width - margin;
+  const left = Math.max(margin, Math.min(rect.left, maxLeft));
+  let top = rect.bottom + 8;
+
+  if (top + tooltipRect.height > window.innerHeight - margin) {
+    top = Math.max(margin, rect.top - tooltipRect.height - 8);
+  }
+
+  tooltip.style.left = `${left}px`;
+  tooltip.style.top = `${top}px`;
+}
+
+function bindTapTooltips() {
+  document.addEventListener("click", (event) => {
+    if (!(event.target instanceof Element)) {
+      return;
+    }
+
+    const trigger = event.target.closest("[data-tooltip]");
+    if (!trigger) {
+      hideTapTooltip();
+      return;
+    }
+
+    if (!trigger.matches("input, textarea, select")) {
+      event.preventDefault();
+    }
+
+    showTapTooltip(trigger);
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      hideTapTooltip();
+    }
+  });
+
+  window.addEventListener("resize", hideTapTooltip);
+  window.addEventListener("scroll", hideTapTooltip, true);
+}
+
 function setLanguage(language) {
+  hideTapTooltip();
   currentLanguage = language;
   numberFormatter = new Intl.NumberFormat(language === "en" ? "en-US" : "zh-CN");
   document.documentElement.lang = language === "en" ? "en" : "zh-CN";
@@ -1285,8 +1474,11 @@ function bindLanguageSwitch() {
 function init() {
   bindTabs();
   bindLanguageSwitch();
+  bindTapTooltips();
   resetMultiRows();
+  bindLockStateControls();
   setLanguage("zh");
+  syncLockStates();
   document.querySelector("#single-form").addEventListener("submit", runSingleSearch);
   document.querySelector("#multi-form").addEventListener("submit", runMultiSearch);
   document.querySelector("#add-line").addEventListener("click", () => {
@@ -1297,7 +1489,10 @@ function init() {
     addLineRow();
   });
   document.querySelector("#multi-form").addEventListener("reset", () => {
-    setTimeout(resetMultiRows, 0);
+    setTimeout(() => {
+      resetMultiRows();
+      syncMultiTotalLockState();
+    }, 0);
   });
 }
 

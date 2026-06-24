@@ -55,19 +55,25 @@
             </div>
             <label>
               <span data-i18n="label.exact" data-tooltip="tip.singleBExact">全字匹配</span>
-              <input name="bExact" type="text" data-placeholder="placeholder.bExact">
+              <input name="bExact" type="text">
             </label>
             <label>
               <span data-i18n="label.requireAll" data-tooltip="tip.bRequireAll">必须包含</span>
               <input name="bRequireAll" type="text" value="123">
             </label>
-            <label>
-              <span data-i18n="label.mayInclude" data-tooltip="tip.mayInclude">可以包含</span>
+            <div class="field-block">
+              <div class="field-label-row">
+                <span data-i18n="label.mayInclude" data-tooltip="tip.mayInclude">可以包含</span>
+                <label class="inline-check">
+                  <input name="bRequireAnyHard" type="checkbox" data-tooltip="tip.requireAnyHard">
+                  <span data-i18n="label.requireAnyHard">至少一个</span>
+                </label>
+              </div>
               <input name="bRequireAny" type="text" value="520,521,1314">
-            </label>
+            </div>
             <label>
               <span data-i18n="label.exclude" data-tooltip="tip.exclude">必须排除</span>
-              <input name="bExclude" type="text" data-placeholder="placeholder.exclude">
+              <input name="bExclude" type="text">
             </label>
           </section>
 
@@ -77,19 +83,25 @@
             </div>
             <label>
               <span data-i18n="label.exact" data-tooltip="tip.singleAExact">全字匹配</span>
-              <input name="aExact" type="text" data-placeholder="placeholder.aExact">
+              <input name="aExact" type="text">
             </label>
             <label>
               <span data-i18n="label.requireAll" data-tooltip="tip.aRequireAll">必须包含</span>
-              <input name="aRequireAll" type="text" data-placeholder="placeholder.requireAll">
+              <input name="aRequireAll" type="text">
             </label>
-            <label>
-              <span data-i18n="label.mayInclude" data-tooltip="tip.mayInclude">可以包含</span>
-              <input name="aRequireAny" type="text" data-placeholder="placeholder.aMayInclude">
-            </label>
+            <div class="field-block">
+              <div class="field-label-row">
+                <span data-i18n="label.mayInclude" data-tooltip="tip.mayInclude">可以包含</span>
+                <label class="inline-check">
+                  <input name="aRequireAnyHard" type="checkbox" data-tooltip="tip.requireAnyHard">
+                  <span data-i18n="label.requireAnyHard">至少一个</span>
+                </label>
+              </div>
+              <input name="aRequireAny" type="text">
+            </div>
             <label>
               <span data-i18n="label.exclude" data-tooltip="tip.exclude">必须排除</span>
-              <input name="aExclude" type="text" data-placeholder="placeholder.aExclude">
+              <input name="aExclude" type="text">
             </label>
           </section>
 
@@ -131,19 +143,25 @@
             <div class="settings-row">
               <label>
                 <span data-i18n="label.aExact" data-tooltip="tip.multiAExact">a 全字匹配</span>
-                <input name="multiAExact" type="text" data-placeholder="placeholder.multiAExact">
+                <input name="multiAExact" type="text">
               </label>
               <label>
                 <span data-i18n="label.aRequireAll" data-tooltip="tip.aRequireAll">a 必须包含</span>
-                <input name="multiARequireAll" type="text" data-placeholder="placeholder.requireAll">
+                <input name="multiARequireAll" type="text">
               </label>
-              <label>
-                <span data-i18n="label.aMayInclude" data-tooltip="tip.mayInclude">a 可以包含</span>
-                <input name="multiARequireAny" type="text" data-placeholder="placeholder.aMayInclude">
-              </label>
+              <div class="field-block">
+                <div class="field-label-row">
+                  <span data-i18n="label.aMayInclude" data-tooltip="tip.mayInclude">a 可以包含</span>
+                  <label class="inline-check">
+                    <input name="multiARequireAnyHard" type="checkbox" data-tooltip="tip.requireAnyHard">
+                    <span data-i18n="label.requireAnyHard">至少一个</span>
+                  </label>
+                </div>
+                <input name="multiARequireAny" type="text">
+              </div>
               <label>
                 <span data-i18n="label.aExclude" data-tooltip="tip.exclude">a 必须排除</span>
-                <input name="multiAExclude" type="text" data-placeholder="placeholder.aExclude">
+                <input name="multiAExclude" type="text">
               </label>
               <label>
                 <span data-i18n="label.maxCandidates" data-tooltip="tip.maxCandidates">每个 b 候选数</span>
@@ -217,6 +235,9 @@
             <p data-i18n="guide.candidates">
               候选数会影响“找得多不多”。候选数/每个 b 候选数越大，越可能看到更多备选，但多榜组合会明显变慢；结果数主要影响最后展示多少条，调大只是让列表更长。
             </p>
+            <p data-i18n="guide.mobileTooltip">
+              移动端没有鼠标悬停，可以点按输入框标题查看说明和示例；点页面其它位置会收起提示。
+            </p>
             <p data-i18n="guide.performance">
               如果 3 个以上 b 没有锁定，页面会先提醒你，因为组合数会快速膨胀。这个版本会自动收紧候选上限，后续再考虑更强的算法。
             </p>
@@ -233,7 +254,13 @@
         <input name="searchWindow" type="number" min="1" max="5000000" data-tooltip="tip.lineSearchWindow">
         <input name="exact" type="text" data-tooltip="tip.lineExact">
         <input name="requireAll" type="text" data-tooltip="tip.lineRequireAll">
-        <input name="requireAny" type="text" data-tooltip="tip.mayInclude">
+        <div class="line-may-include">
+          <input name="requireAny" type="text" data-tooltip="tip.mayInclude">
+          <label class="inline-check">
+            <input name="requireAnyHard" type="checkbox" data-tooltip="tip.requireAnyHard">
+            <span data-i18n="label.requireAnyHard">至少一个</span>
+          </label>
+        </div>
         <input name="exclude" type="text" data-tooltip="tip.exclude">
         <button class="ghost-button icon-button" type="button" data-remove-line data-title="button.delete">×</button>
       </div>
