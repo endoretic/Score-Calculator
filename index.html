@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>控分计算器</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <h1 data-i18n="app.title">控分计算器</h1>
+        <p data-i18n="app.subtitle">搜索 · 控分 · 评价</p>
+      </div>
+      <div class="language-switch" data-aria-label="language.switch">
+        <button class="language-button active" type="button" data-language="zh">中文</button>
+        <button class="language-button" type="button" data-language="en">English</button>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <nav class="tabs" data-aria-label="tabs.mode">
+        <button class="tab-button active" type="button" data-tab="single" data-i18n="tab.single">单榜</button>
+        <button class="tab-button" type="button" data-tab="multi" data-i18n="tab.multi">多榜</button>
+        <button class="tab-button" type="button" data-tab="guide" data-i18n="tab.guide">说明</button>
+      </nav>
+
+      <section class="tab-panel active" id="single-panel">
+        <form class="workspace-grid" id="single-form">
+          <section class="tool-panel">
+            <div class="panel-heading">
+              <h2 data-i18n="section.baseScores">基础分数</h2>
+            </div>
+            <label>
+              <span data-i18n="label.aCurrent" data-tooltip="tip.aCurrent">当前总榜 a</span>
+              <input name="aCurrent" type="number" min="0" max="1999999999" value="50000000">
+            </label>
+            <label>
+              <span data-i18n="label.bCurrent" data-tooltip="tip.bCurrent">当前单榜 b</span>
+              <input name="bCurrent" type="number" min="0" max="1999999999" value="3000000">
+            </label>
+            <label>
+              <span data-i18n="label.targetIncrements" data-tooltip="tip.targetIncrements">增量下限</span>
+              <input name="targetIncrements" type="text" value="3000000,4000000,5000000,6000000">
+            </label>
+            <label>
+              <span data-i18n="label.searchWindow" data-tooltip="tip.searchWindow">搜索窗口</span>
+              <input name="searchWindow" type="number" min="1" max="5000000" value="1000000">
+            </label>
+          </section>
+
+          <section class="tool-panel">
+            <div class="panel-heading">
+              <h2 data-i18n="section.bRules">b 硬规则</h2>
+            </div>
+            <label>
+              <span data-i18n="label.exact" data-tooltip="tip.singleBExact">全字匹配</span>
+              <input name="bExact" type="text" data-placeholder="placeholder.bExact">
+            </label>
+            <label>
+              <span data-i18n="label.requireAll" data-tooltip="tip.bRequireAll">必须包含</span>
+              <input name="bRequireAll" type="text" value="123">
+            </label>
+            <label>
+              <span data-i18n="label.mayInclude" data-tooltip="tip.mayInclude">可以包含</span>
+              <input name="bRequireAny" type="text" value="520,521,1314">
+            </label>
+            <label>
+              <span data-i18n="label.exclude" data-tooltip="tip.exclude">必须排除</span>
+              <input name="bExclude" type="text" data-placeholder="placeholder.exclude">
+            </label>
+          </section>
+
+          <section class="tool-panel">
+            <div class="panel-heading">
+              <h2 data-i18n="section.aRules">a 硬规则</h2>
+            </div>
+            <label>
+              <span data-i18n="label.exact" data-tooltip="tip.singleAExact">全字匹配</span>
+              <input name="aExact" type="text" data-placeholder="placeholder.aExact">
+            </label>
+            <label>
+              <span data-i18n="label.requireAll" data-tooltip="tip.aRequireAll">必须包含</span>
+              <input name="aRequireAll" type="text" data-placeholder="placeholder.requireAll">
+            </label>
+            <label>
+              <span data-i18n="label.mayInclude" data-tooltip="tip.mayInclude">可以包含</span>
+              <input name="aRequireAny" type="text" data-placeholder="placeholder.aMayInclude">
+            </label>
+            <label>
+              <span data-i18n="label.exclude" data-tooltip="tip.exclude">必须排除</span>
+              <input name="aExclude" type="text" data-placeholder="placeholder.aExclude">
+            </label>
+          </section>
+
+          <section class="tool-panel">
+            <div class="panel-heading">
+              <h2 data-i18n="section.output">输出控制</h2>
+            </div>
+            <label>
+              <span data-i18n="label.scoreThreshold" data-tooltip="tip.scoreThreshold">综合评分阈值</span>
+              <input name="scoreThreshold" type="number" min="0" max="300" value="30">
+            </label>
+            <label>
+              <span data-i18n="label.resultLimit" data-tooltip="tip.resultLimit">每档候选数</span>
+              <input name="resultLimit" type="number" min="1" max="50" value="8">
+            </label>
+            <div class="actions">
+              <button class="primary-button" type="submit" data-i18n="button.run">计算</button>
+              <button class="ghost-button" type="reset" data-i18n="button.reset">重置</button>
+            </div>
+          </section>
+        </form>
+
+        <section class="results-panel" aria-live="polite">
+          <div class="results-header">
+            <h2 data-i18n="section.singleResults">单榜结果</h2>
+            <span id="single-status" data-status-key="status.waiting">等待计算</span>
+          </div>
+          <div class="result-list" id="single-results"></div>
+        </section>
+      </section>
+
+      <section class="tab-panel" id="multi-panel">
+        <form id="multi-form">
+          <section class="tool-panel multi-settings">
+            <div class="panel-heading">
+              <h2 data-i18n="section.totalRules">总榜规则</h2>
+              <button class="ghost-button compact" type="button" id="add-line" data-i18n="button.addLine">添加 b</button>
+            </div>
+            <div class="settings-row">
+              <label>
+                <span data-i18n="label.aExact" data-tooltip="tip.multiAExact">a 全字匹配</span>
+                <input name="multiAExact" type="text" data-placeholder="placeholder.multiAExact">
+              </label>
+              <label>
+                <span data-i18n="label.aRequireAll" data-tooltip="tip.aRequireAll">a 必须包含</span>
+                <input name="multiARequireAll" type="text" data-placeholder="placeholder.requireAll">
+              </label>
+              <label>
+                <span data-i18n="label.aMayInclude" data-tooltip="tip.mayInclude">a 可以包含</span>
+                <input name="multiARequireAny" type="text" data-placeholder="placeholder.aMayInclude">
+              </label>
+              <label>
+                <span data-i18n="label.aExclude" data-tooltip="tip.exclude">a 必须排除</span>
+                <input name="multiAExclude" type="text" data-placeholder="placeholder.aExclude">
+              </label>
+              <label>
+                <span data-i18n="label.maxCandidates" data-tooltip="tip.maxCandidates">每个 b 候选数</span>
+                <input name="maxCandidates" type="number" min="1" max="100" value="20">
+              </label>
+              <label>
+                <span data-i18n="label.maxCombinations" data-tooltip="tip.maxCombinations">最大组合数</span>
+                <input name="maxCombinations" type="number" min="1000" max="2000000" value="500000">
+              </label>
+              <label>
+                <span data-i18n="label.multiResultLimit" data-tooltip="tip.multiResultLimit">结果数</span>
+                <input name="multiResultLimit" type="number" min="1" max="50" value="10">
+              </label>
+            </div>
+          </section>
+
+          <section class="line-table" data-aria-label="lineTable.label">
+            <div class="line-header">
+              <span data-i18n="line.name" data-tooltip="tip.lineName">名称</span>
+              <span data-i18n="line.current" data-tooltip="tip.lineCurrent">当前值</span>
+              <span data-i18n="line.minIncrement" data-tooltip="tip.lineMinIncrement">增量下限</span>
+              <span data-i18n="line.searchWindow" data-tooltip="tip.lineSearchWindow">窗口</span>
+              <span data-i18n="line.exact" data-tooltip="tip.lineExact">锁定值</span>
+              <span data-i18n="line.requireAll" data-tooltip="tip.lineRequireAll">必须包含</span>
+              <span data-i18n="line.mayInclude" data-tooltip="tip.mayInclude">可以包含</span>
+              <span data-i18n="line.exclude" data-tooltip="tip.exclude">排除</span>
+              <span></span>
+            </div>
+            <div id="line-rows"></div>
+          </section>
+
+          <div class="actions multi-actions">
+            <button class="primary-button" type="submit" data-i18n="button.runMulti">计算多榜</button>
+            <button class="ghost-button" type="reset" data-i18n="button.reset">重置</button>
+          </div>
+        </form>
+
+        <section class="results-panel" aria-live="polite">
+          <div class="results-header">
+            <h2 data-i18n="section.multiResults">多榜结果</h2>
+            <span id="multi-status" data-status-key="status.waiting">等待计算</span>
+          </div>
+          <div class="result-list" id="multi-results"></div>
+        </section>
+      </section>
+
+      <section class="tab-panel" id="guide-panel">
+        <section class="guide-panel">
+          <div class="panel-heading">
+            <h2 data-i18n="guide.title">使用说明</h2>
+          </div>
+          <div class="guide-content">
+            <p data-i18n="guide.intro">
+              这个工具是给 World Link 控分用的：一边看单人榜 b，一边看总榜 a，帮你把“少打一点”和“数字好看”放在一起比较。
+            </p>
+            <p data-i18n="guide.single">
+              单榜适合只剩最后一个章节还在打的情况。填当前总榜 a、当前单人榜 b 和最低增量，工具会保持 a-b 的差值不变，找出打完这个章节后可能出现的 b 和 a。
+            </p>
+            <p data-i18n="guide.multi">
+              多榜适合还有多个章节要规划的情况。已经结算的章节可以用锁定值固定，没结算的章节再设置最低增量和数字规则；最后总榜按所有 b 相加。
+            </p>
+            <p data-i18n="guide.exact">
+              全字匹配/锁定值就是“这个榜最后就按这个分算”。适合章节已结束，或你已经决定要打到某个分数。锁定后它不再搜索，只作为常量参与总榜。
+            </p>
+            <p data-i18n="guide.requireAll">
+              单人榜 b 的“必须包含”最常见用途是控制生日、纪念日、名字谐音或你一定想展示的数字。比如填 123，最终 b 就必须完整出现 123。
+            </p>
+            <p data-i18n="guide.defaults">
+              大多数参数第一次可以先用默认：搜索窗口、综合评分阈值、每档候选数和结果数都不用急着改。没结果时先加大搜索窗口；结果太多时提高阈值或减少结果数。
+            </p>
+            <p data-i18n="guide.candidates">
+              候选数会影响“找得多不多”。候选数/每个 b 候选数越大，越可能看到更多备选，但多榜组合会明显变慢；结果数主要影响最后展示多少条，调大只是让列表更长。
+            </p>
+            <p data-i18n="guide.performance">
+              如果 3 个以上 b 没有锁定，页面会先提醒你，因为组合数会快速膨胀。这个版本会自动收紧候选上限，后续再考虑更强的算法。
+            </p>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <template id="line-row-template">
+      <div class="line-row">
+        <input name="name" type="text" data-tooltip="tip.lineName">
+        <input name="current" type="number" min="0" max="1999999999" data-tooltip="tip.lineCurrent">
+        <input name="minIncrement" type="number" min="0" max="1999999999" data-tooltip="tip.lineMinIncrement">
+        <input name="searchWindow" type="number" min="1" max="5000000" data-tooltip="tip.lineSearchWindow">
+        <input name="exact" type="text" data-tooltip="tip.lineExact">
+        <input name="requireAll" type="text" data-tooltip="tip.lineRequireAll">
+        <input name="requireAny" type="text" data-tooltip="tip.mayInclude">
+        <input name="exclude" type="text" data-tooltip="tip.exclude">
+        <button class="ghost-button icon-button" type="button" data-remove-line data-title="button.delete">×</button>
+      </div>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>

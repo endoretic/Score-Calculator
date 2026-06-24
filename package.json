@@ -1,0 +1,17 @@
+{
+  "name": "score-calculator",
+  "version": "1.0.0",
+  "description": "Static score control calculator.",
+  "private": true,
+  "main": "app.js",
+  "scripts": {
+    "check:js": "node --check app.js",
+    "test": "playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  }
+}
