@@ -41,7 +41,7 @@
             </label>
             <label>
               <span data-i18n="label.targetIncrements" data-tooltip="tip.targetIncrements">增量下限</span>
-              <input name="targetIncrements" type="text" value="3000000,4000000,5000000,6000000">
+              <input name="targetIncrements" type="text" value="3000000,4000000,5000000">
             </label>
             <label>
               <span data-i18n="label.searchWindow" data-tooltip="tip.searchWindow">搜索窗口</span>
@@ -149,15 +149,15 @@
                 <span data-i18n="label.aRequireAll" data-tooltip="tip.aRequireAll">a 必须包含</span>
                 <input name="multiARequireAll" type="text">
               </label>
-              <div class="field-block">
-                <div class="field-label-row">
-                  <span data-i18n="label.aMayInclude" data-tooltip="tip.mayInclude">a 可以包含</span>
+              <div class="field-block total-may-include">
+                <span data-i18n="label.aMayInclude" data-tooltip="tip.mayInclude">a 可以包含</span>
+                <div class="total-may-input">
+                  <input name="multiARequireAny" type="text">
                   <label class="inline-check">
                     <input name="multiARequireAnyHard" type="checkbox" data-tooltip="tip.requireAnyHard">
                     <span data-i18n="label.requireAnyHard">至少一个</span>
                   </label>
                 </div>
-                <input name="multiARequireAny" type="text">
               </div>
               <label>
                 <span data-i18n="label.aExclude" data-tooltip="tip.exclude">a 必须排除</span>
@@ -184,7 +184,6 @@
               <span data-i18n="line.current" data-tooltip="tip.lineCurrent">当前值</span>
               <span data-i18n="line.minIncrement" data-tooltip="tip.lineMinIncrement">增量下限</span>
               <span data-i18n="line.searchWindow" data-tooltip="tip.lineSearchWindow">窗口</span>
-              <span data-i18n="line.exact" data-tooltip="tip.lineExact">锁定值</span>
               <span data-i18n="line.requireAll" data-tooltip="tip.lineRequireAll">必须包含</span>
               <span data-i18n="line.mayInclude" data-tooltip="tip.mayInclude">可以包含</span>
               <span data-i18n="line.exclude" data-tooltip="tip.exclude">排除</span>
@@ -221,10 +220,10 @@
               单榜适合只剩最后一个章节还在打的情况。填当前总榜 a、当前单人榜 b 和最低增量，工具会保持 a-b 的差值不变，找出打完这个章节后可能出现的 b 和 a。
             </p>
             <p data-i18n="guide.multi">
-              多榜适合还有多个章节要规划的情况。已经结算的章节可以用锁定值固定，没结算的章节再设置最低增量和数字规则；最后总榜按所有 b 相加。
+              多榜适合还有多个章节要规划的情况。已经结算的章节可以勾选“锁定”，把当前值当作最终分；没结算的章节再设置最低增量和数字规则。最后总榜按所有 b 相加。
             </p>
             <p data-i18n="guide.exact">
-              全字匹配/锁定值就是“这个榜最后就按这个分算”。适合章节已结束，或你已经决定要打到某个分数。锁定后它不再搜索，只作为常量参与总榜。
+              全字匹配/锁定就是“这个榜最后就按这个分算”。单榜和总榜可用全字匹配固定目标分；多榜 b 勾选“锁定”后会把当前值当作最终分，只作为常量参与总榜。
             </p>
             <p data-i18n="guide.requireAll">
               单人榜 b 的“必须包含”最常见用途是控制生日、纪念日、名字谐音或你一定想展示的数字。比如填 123，最终 b 就必须完整出现 123。
@@ -249,10 +248,15 @@
     <template id="line-row-template">
       <div class="line-row">
         <input name="name" type="text" data-tooltip="tip.lineName">
-        <input name="current" type="number" min="0" max="1999999999" data-tooltip="tip.lineCurrent">
+        <div class="line-current">
+          <input name="current" type="number" min="0" max="1999999999" data-tooltip="tip.lineCurrent">
+          <label class="inline-check">
+            <input name="locked" type="checkbox" data-tooltip="tip.lineLocked">
+            <span data-i18n="line.locked">锁定</span>
+          </label>
+        </div>
         <input name="minIncrement" type="number" min="0" max="1999999999" data-tooltip="tip.lineMinIncrement">
         <input name="searchWindow" type="number" min="1" max="5000000" data-tooltip="tip.lineSearchWindow">
-        <input name="exact" type="text" data-tooltip="tip.lineExact">
         <input name="requireAll" type="text" data-tooltip="tip.lineRequireAll">
         <div class="line-may-include">
           <input name="requireAny" type="text" data-tooltip="tip.mayInclude">

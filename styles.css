@@ -206,6 +206,11 @@ label {
   font-size: 13px;
 }
 
+.settings-row > label,
+.settings-row > .field-block {
+  align-content: start;
+}
+
 .field-label-row {
   display: flex;
   align-items: center;
@@ -225,11 +230,12 @@ label {
 }
 
 label > span[data-tooltip],
+.field-block > span[data-tooltip],
 .field-label-row > span[data-tooltip],
 .inline-check span[data-tooltip],
 .line-header span[data-tooltip] {
   width: fit-content;
-  cursor: help;
+  cursor: pointer;
   text-decoration: underline dotted rgba(100, 113, 125, 0.65);
   text-underline-offset: 3px;
 }
@@ -272,13 +278,30 @@ input:disabled {
   padding: 0;
 }
 
+.line-current,
 .line-may-include {
   display: grid;
   gap: 5px;
 }
 
+.line-current {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.line-current .inline-check {
+  justify-self: end;
+}
+
+.line-may-include {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+}
+
 .line-may-include .inline-check {
-  justify-self: start;
+  justify-self: end;
 }
 
 .actions {
@@ -417,6 +440,35 @@ input:disabled {
   gap: 10px;
 }
 
+.settings-row > label,
+.settings-row > .field-block {
+  min-height: 64px;
+  margin-bottom: 0;
+}
+
+.settings-row > .field-block {
+  grid-template-rows: minmax(20px, auto) 38px;
+}
+
+.settings-row > .total-may-include {
+  grid-template-rows: 16px auto;
+  min-height: 88px;
+}
+
+.total-may-input {
+  display: grid;
+  grid-template-rows: 38px auto;
+  gap: 4px;
+}
+
+.total-may-input input[name="multiARequireAny"] {
+  height: 100%;
+}
+
+.total-may-input .inline-check {
+  justify-self: end;
+}
+
 .line-table {
   overflow-x: auto;
 }
@@ -424,8 +476,8 @@ input:disabled {
 .line-header,
 .line-row {
   display: grid;
-  grid-template-columns: 100px 130px 130px 110px 1fr 1fr 1fr 1fr 44px;
-  min-width: 1180px;
+  grid-template-columns: 100px 205px 130px 110px minmax(145px, 0.85fr) minmax(220px, 1.2fr) minmax(130px, 0.75fr) 44px;
+  min-width: 1140px;
   gap: 8px;
   align-items: center;
   padding: 10px;
@@ -476,8 +528,8 @@ input:disabled {
   z-index: 100;
   max-width: min(320px, calc(100vw - 24px));
   padding: 9px 10px;
-  border-radius: 6px;
-  background: #16202a;
+  border-radius: 8px;
+  background: #111827;
   color: #fff;
   box-shadow: var(--shadow);
   font-size: 12px;

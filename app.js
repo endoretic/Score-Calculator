@@ -44,8 +44,8 @@ const I18N = {
     "guide.title": "使用说明",
     "guide.intro": "这个工具是给 World Link 控分用的：一边看单人榜 b，一边看总榜 a，帮你把“少打一点”和“数字好看”放在一起比较。",
     "guide.single": "单榜适合只剩最后一个章节还在打的情况。填当前总榜 a、当前单人榜 b 和最低增量，工具会保持 a-b 的差值不变，找出打完这个章节后可能出现的 b 和 a。",
-    "guide.multi": "多榜适合还有多个章节要规划的情况。已经结算的章节可以用锁定值固定，没结算的章节再设置最低增量和数字规则；最后总榜按所有 b 相加。",
-    "guide.exact": "全字匹配/锁定值就是“这个榜最后就按这个分算”。适合章节已结束，或你已经决定要打到某个分数。锁定后它不再搜索，只作为常量参与总榜。",
+    "guide.multi": "多榜适合还有多个章节要规划的情况。已经结算的章节可以勾选“锁定”，把当前值当作最终分；没结算的章节再设置最低增量和数字规则。最后总榜按所有 b 相加。",
+    "guide.exact": "全字匹配/锁定就是“这个榜最后就按这个分算”。单榜和总榜可用全字匹配固定目标分；多榜 b 勾选“锁定”后会把当前值当作最终分，只作为常量参与总榜。",
     "guide.requireAll": "单人榜 b 的“必须包含”最常见用途是控制生日、纪念日、名字谐音或你一定想展示的数字。比如填 123，最终 b 就必须完整出现 123。",
     "guide.defaults": "大多数参数第一次可以先用默认：搜索窗口、综合评分阈值、每档候选数和结果数都不用急着改。没结果时先加大搜索窗口；结果太多时提高阈值或减少结果数。",
     "guide.candidates": "候选数会影响“找得多不多”。候选数/每个 b 候选数越大，越可能看到更多备选，但多榜组合会明显变慢；结果数主要影响最后展示多少条，调大只是让列表更长。",
@@ -73,7 +73,7 @@ const I18N = {
     "line.current": "当前值",
     "line.minIncrement": "增量下限",
     "line.searchWindow": "窗口",
-    "line.exact": "锁定值",
+    "line.locked": "锁定",
     "line.requireAll": "必须包含",
     "line.mayInclude": "可以包含",
     "line.exclude": "排除",
@@ -115,10 +115,10 @@ const I18N = {
     "tip.maxCombinations": "浏览器可计算的组合上限。默认用于防卡死；调高会更慢。",
     "tip.multiResultLimit": "只影响最后展示多少组结果；默认够挑，调大只是多看一些。",
     "tip.lineName": "给章节起个名字，结果里好认。",
-    "tip.lineCurrent": "填这个章节现在的单人榜分。",
-    "tip.lineMinIncrement": "这个章节至少还要打多少。章节已结束并填了锁定值时可不管。",
+    "tip.lineCurrent": "填这个章节现在的单人榜分；勾选锁定时，它就是最终分数。",
+    "tip.lineMinIncrement": "这个章节至少还要打多少。章节已勾选锁定时可不管。",
     "tip.lineSearchWindow": "这个章节从最低增量往上找多远；默认先试，没结果再加。",
-    "tip.lineExact": "章节已结束或分数已确定就填这里，它会被锁定，不再参与搜索。",
+    "tip.lineLocked": "章节已结束或分数已确定时勾选。勾选后当前值会作为最终分，其它搜索和规则项会禁用。",
     "rule.exact": "全字匹配：{patterns}",
     "rule.requireAll": "必须包含：{patterns}",
     "rule.mayInclude": "可以包含：{patterns}",
@@ -157,7 +157,7 @@ const I18N = {
     "error.tooManyB": "初版最多支持 6 个 b",
     "error.noLineHit": "{name} 没有命中硬规则",
     "error.tooManyCombos": "预计组合 {count} 组，超过上限 {max}",
-    "confirm.unlocked": "当前有 {count} 个 b 未设置锁定值，组合数可能快速膨胀。\n\n继续后，每个未锁定 b 的候选上限将按数量自动收紧到 {limit}。",
+    "confirm.unlocked": "当前有 {count} 个 b 未勾选锁定，组合数可能快速膨胀。\n\n继续后，每个未锁定 b 的候选上限将按数量自动收紧到 {limit}。",
   },
   en: {
     "app.title": "Score Control Calculator",
@@ -177,8 +177,8 @@ const I18N = {
     "guide.title": "Guide",
     "guide.intro": "Use this for World Link score control: compare the chapter score b and total score a while balancing fewer extra points with nicer-looking numbers.",
     "guide.single": "Single mode fits the common case where only the last chapter is still active. Enter current total a, current chapter b, and the minimum increment; the tool keeps a-b unchanged and finds possible final b and a values.",
-    "guide.multi": "Multi mode is for planning several chapters. Lock chapters that already ended, set minimum increments and digit rules for the open ones, and the final total a is calculated from all b values.",
-    "guide.exact": "Exact match / Locked value means “treat this ranking as this final score.” Use it for ended chapters or a score you are already committed to. Once locked, it is not searched and only contributes to the total.",
+    "guide.multi": "Multi mode is for planning several chapters. Check Locked for chapters that already ended so the current value is treated as final; set minimum increments and digit rules for open chapters. The final total a is calculated from all b values.",
+    "guide.exact": "Exact match / Locked means “treat this ranking as this final score.” Single and total rules use exact match; multi b rows use the Locked checkbox to treat the current value as final and contribute it as a constant.",
     "guide.requireAll": "For single b, Must contain is usually for birthdays, anniversaries, name puns, or any digits you definitely want shown. For example, 123 means the final b must contain 123 exactly.",
     "guide.defaults": "Most settings can stay at their defaults on the first run: search window, score threshold, candidates per tier, and result count. If nothing appears, increase the search window; if too much appears, raise the threshold or show fewer results.",
     "guide.candidates": "Candidate limits control how much the tool explores. Larger candidates-per-tier or candidates-per-b values can reveal more options, but multi-score combinations get slower quickly. Result count mostly changes how many final rows are displayed.",
@@ -206,7 +206,7 @@ const I18N = {
     "line.current": "Current",
     "line.minIncrement": "Min increment",
     "line.searchWindow": "Window",
-    "line.exact": "Locked value",
+    "line.locked": "Locked",
     "line.requireAll": "Must contain",
     "line.mayInclude": "May include",
     "line.exclude": "Exclude",
@@ -248,10 +248,10 @@ const I18N = {
     "tip.maxCombinations": "Browser safety cap for combinations. Raising it can make the page slower.",
     "tip.multiResultLimit": "Only controls how many final groups are displayed; larger mostly makes a longer list.",
     "tip.lineName": "Name the chapter so result details are easy to read.",
-    "tip.lineCurrent": "Current score for this chapter ranking.",
-    "tip.lineMinIncrement": "Minimum more points for this chapter. Ignore it when a locked value is set.",
+    "tip.lineCurrent": "Current score for this chapter ranking. When Locked is checked, this is the final score.",
+    "tip.lineMinIncrement": "Minimum more points for this chapter. Ignore it when Locked is checked.",
     "tip.lineSearchWindow": "How far this chapter searches upward from the minimum increment. Increase only if needed.",
-    "tip.lineExact": "Enter ended or fixed chapter scores here. Locked values are not searched.",
+    "tip.lineLocked": "Check this when the chapter has ended or its score is fixed. The current value becomes final, and other search/rule fields are disabled.",
     "rule.exact": "Exact match: {patterns}",
     "rule.requireAll": "Must contain: {patterns}",
     "rule.mayInclude": "May include: {patterns}",
@@ -484,15 +484,25 @@ function syncMultiTotalLockState() {
 }
 
 function syncLineRowLockState(row) {
-  syncLockGroup(row, "exact", [
-    "current",
+  const lockInput = row.querySelector('[name="locked"]');
+  if (!lockInput) {
+    return;
+  }
+
+  const locked = lockInput.checked;
+  for (const name of [
     "minIncrement",
     "searchWindow",
     "requireAll",
     "requireAny",
     "requireAnyHard",
     "exclude",
-  ]);
+  ]) {
+    const input = row.querySelector(`[name="${name}"]`);
+    if (input) {
+      setFieldDisabled(input, locked);
+    }
+  }
 }
 
 function syncLockStates() {
@@ -934,23 +944,28 @@ function renderError(selector, message) {
 }
 
 function lineRowValues(row) {
-  const exact = parsePatternList(row.querySelector('[name="exact"]').value);
-  const locked = exact.length > 0;
+  const current = parseNumber(row.querySelector('[name="current"]').value, t("line.current"), {
+    max: 1999999999,
+  });
+  const locked = row.querySelector('[name="locked"]').checked;
+  const exact = locked ? [String(current)] : [];
   const includeGroups = locked ? [] : parsePatternGroups(row.querySelector('[name="requireAny"]').value);
   const requireAnyHard = !locked && row.querySelector('[name="requireAnyHard"]').checked;
 
   return {
     name: row.querySelector('[name="name"]').value.trim() || "b",
-    current: parseNumber(row.querySelector('[name="current"]').value, t("line.current"), {
-      max: 1999999999,
-    }),
-    minIncrement: parseNumber(row.querySelector('[name="minIncrement"]').value, t("line.minIncrement"), {
-      max: 1999999999,
-    }),
-    searchWindow: parseNumber(row.querySelector('[name="searchWindow"]').value, t("line.searchWindow"), {
-      min: 1,
-      max: 5000000,
-    }),
+    current,
+    minIncrement: locked
+      ? 0
+      : parseNumber(row.querySelector('[name="minIncrement"]').value, t("line.minIncrement"), {
+          max: 1999999999,
+        }),
+    searchWindow: locked
+      ? 1
+      : parseNumber(row.querySelector('[name="searchWindow"]').value, t("line.searchWindow"), {
+          min: 1,
+          max: 5000000,
+        }),
     rule: new DigitRule({
       exact,
       requireAll: locked ? [] : parsePatternList(row.querySelector('[name="requireAll"]').value),
@@ -965,7 +980,7 @@ async function generateLineCandidates(config, maxCandidates, onProgress) {
   const candidates = [];
 
   if (config.rule.exact.length) {
-    const values = [...new Set(exactNumbers(config.rule, `${config.name} ${t("line.exact")}`))]
+    const values = [...new Set(exactNumbers(config.rule, `${config.name} ${t("line.locked")}`))]
       .sort((left, right) => left - right);
 
     for (const value of values) {
@@ -1226,7 +1241,7 @@ function addLineRow(values = {}) {
     current: "",
     minIncrement: 0,
     searchWindow: 1000000,
-    exact: "",
+    locked: false,
     requireAll: "",
     requireAny: "",
     requireAnyHard: false,
@@ -1300,7 +1315,7 @@ function bindLockStateControls() {
       return;
     }
 
-    if (event.target.name === "exact") {
+    if (event.target.name === "locked") {
       const row = event.target.closest(".line-row");
       if (row) {
         syncLineRowLockState(row);
@@ -1309,7 +1324,7 @@ function bindLockStateControls() {
   });
 
   lineRows.addEventListener("input", (event) => {
-    if (event.target instanceof HTMLInputElement && event.target.name === "exact") {
+    if (event.target instanceof HTMLInputElement && event.target.name === "locked") {
       const row = event.target.closest(".line-row");
       if (row) {
         syncLineRowLockState(row);
@@ -1345,17 +1360,7 @@ function applyLocalizedAttributes(root = document) {
   });
 
   root.querySelectorAll("[data-tooltip]").forEach((element) => {
-    const tooltip = t(element.dataset.tooltip);
-    element.title = tooltip;
-
-    const label = element.closest("label");
-    if (label) {
-      label.title = tooltip;
-      const input = label.querySelector("input");
-      if (input) {
-        input.title = tooltip;
-      }
-    }
+    element.removeAttribute("title");
   });
 
   root.querySelectorAll("[data-aria-label]").forEach((element) => {
@@ -1424,10 +1429,12 @@ function bindTapTooltips() {
       return;
     }
 
-    if (!trigger.matches("input, textarea, select")) {
-      event.preventDefault();
+    if (trigger.matches("input, textarea, select, button")) {
+      hideTapTooltip();
+      return;
     }
 
+    event.preventDefault();
     showTapTooltip(trigger);
   });
 

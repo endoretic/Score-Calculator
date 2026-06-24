@@ -72,10 +72,11 @@ test("exact and locked values disable related inputs", async ({ page }) => {
   await expect(multiForm.locator('[name="multiAExclude"]')).toBeDisabled();
 
   const first = page.locator("#line-rows .line-row").nth(0);
-  await first.locator('[name="exact"]').fill("6001234");
+  await first.locator('[name="current"]').fill("6001234");
+  await first.locator('[name="locked"]').check();
   await expect(first.locator('[name="name"]')).toBeEnabled();
-  await expect(first.locator('[name="exact"]')).toBeEnabled();
-  await expect(first.locator('[name="current"]')).toBeDisabled();
+  await expect(first.locator('[name="current"]')).toBeEnabled();
+  await expect(first.locator('[name="locked"]')).toBeEnabled();
   await expect(first.locator('[name="minIncrement"]')).toBeDisabled();
   await expect(first.locator('[name="searchWindow"]')).toBeDisabled();
   await expect(first.locator('[name="requireAll"]')).toBeDisabled();
@@ -83,7 +84,7 @@ test("exact and locked values disable related inputs", async ({ page }) => {
   await expect(first.locator('[name="requireAnyHard"]')).toBeDisabled();
   await expect(first.locator('[name="exclude"]')).toBeDisabled();
 
-  await first.locator('[name="exact"]').fill("");
+  await first.locator('[name="locked"]').uncheck();
   await expect(first.locator('[name="current"]')).toBeEnabled();
   await expect(first.locator('[name="minIncrement"]')).toBeEnabled();
   await expect(first.locator('[name="searchWindow"]')).toBeEnabled();
@@ -125,7 +126,7 @@ test("multi-score warns before searching three unlocked b lines", async ({ page 
   await page.locator("#line-rows .line-row").nth(2).locator('[name="current"]').fill("0");
 
   page.once("dialog", async (dialog) => {
-    expect(dialog.message()).toContain("3 个 b 未设置锁定值");
+    expect(dialog.message()).toContain("3 个 b 未勾选锁定");
     await dialog.dismiss();
   });
 
@@ -133,7 +134,7 @@ test("multi-score warns before searching three unlocked b lines", async ({ page 
   await expect(page.getByText("已取消")).toBeVisible();
 });
 
-test("multi-score exact match locks b as a constant", async ({ page }) => {
+test("multi-score locked b uses current value as a constant", async ({ page }) => {
   const fileUrl = pathToFileURL(path.resolve(__dirname, "..", "index.html")).href;
 
   await page.goto(fileUrl);
@@ -145,15 +146,15 @@ test("multi-score exact match locks b as a constant", async ({ page }) => {
 
   await first.locator('[name="current"]').fill("6001234");
   await first.locator('[name="minIncrement"]').fill("999999");
-  await first.locator('[name="exact"]').fill("6001234");
+  await first.locator('[name="locked"]').check();
   await expect(first.locator('[name="name"]')).toBeEnabled();
-  await expect(first.locator('[name="current"]')).toBeDisabled();
+  await expect(first.locator('[name="current"]')).toBeEnabled();
   await expect(first.locator('[name="requireAll"]')).toBeDisabled();
   await expect(first.locator('[name="requireAny"]')).toBeDisabled();
 
   await second.locator('[name="current"]').fill("1000");
   await second.locator('[name="minIncrement"]').fill("999999");
-  await second.locator('[name="exact"]').fill("1000");
+  await second.locator('[name="locked"]').check();
 
   await page.getByRole("button", { name: "计算多榜" }).click();
 
@@ -172,18 +173,23 @@ test("language switch renders English labels and tooltips", async ({ page }) => 
   await expect(page.getByRole("button", { name: "Run" })).toBeVisible();
   await expect(page.getByText("May include").first()).toBeVisible();
   await expect(page.getByText("At least one").first()).toBeVisible();
-  await expect(page.locator("#single-form").locator('[name="targetIncrements"]')).toHaveAttribute(
+  await expect(page.locator("#single-form").locator('[name="targetIncrements"]')).not.toHaveAttribute(
     "title",
-    "Planned minimum points to add. Keep the default tiers for a first pass.",
+    /.+/,
   );
   await expect(page.locator("#single-form").locator('[name="bExact"]')).not.toHaveAttribute(
     "placeholder",
     /.+/,
   );
-  await expect(page.locator("#single-form").locator('[name="bExact"]')).toHaveAttribute(
-    "title",
-    "Enter a final b only when the chapter ended or you want to check one exact score. Example: 6001234.",
+  await expect(page.locator("#single-form").locator('[name="bExact"]')).not.toHaveAttribute("title", /.+/);
+
+  await page.locator('#single-form [data-tooltip="tip.targetIncrements"]').click();
+  await expect(page.locator(".floating-tooltip")).toContainText(
+    "Planned minimum points to add. Keep the default tiers for a first pass.",
   );
+
+  await page.locator("#single-form").locator('[name="targetIncrements"]').click();
+  await expect(page.locator(".floating-tooltip")).toBeHidden();
 });
 
 test("guide tab explains World Link score control usage", async ({ page }) => {
