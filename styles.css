@@ -384,6 +384,10 @@ input:disabled {
   font-size: 14px;
 }
 
+.plan-cell.line-detail span {
+  white-space: pre-line;
+}
+
 .plan-cell.accent span {
   color: var(--accent);
   font-weight: 700;

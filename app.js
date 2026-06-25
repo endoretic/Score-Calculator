@@ -130,9 +130,9 @@ const I18N = {
     "reason.palindrome": "{value} 回文（+{points}）",
     "reason.sequence": "{value} 顺子（+{points}）",
     "reason.ending": "尾数 {value}（+{points}）",
-    "reason.overlap": "{left}+{right} 拼成 {fused}，节省 {overlap} 位（+{points}）",
+    "reason.ruleHit": "命中规则 {pattern}（+{points}）",
     "empty.beauty": "暂无明显数字亮点",
-    "empty.control": "暂无重叠拼接",
+    "empty.control": "暂无规则命中",
     "empty.noCandidate": "本搜索区间内没有达到阈值的综合候选",
     "empty.noHardRuleB": "没有找到满足硬规则的 b",
     "empty.noMultiPlan": "没有找到满足总榜规则的组合",
@@ -142,14 +142,14 @@ const I18N = {
     "cell.increment": "增量",
     "cell.singleB": "单榜 b",
     "cell.totalA": "总榜 a",
-    "cell.control": "控分结构",
+    "cell.control": "规则命中",
     "cell.beauty": "分数评价",
     "table.total": "综合",
     "multi.card": "组合 {index}",
     "multi.totalIncrement": "总增量",
-    "multi.control": "b 控分",
+    "multi.control": "b 分数评价",
     "multi.beauty": "a 分数评价",
-    "multi.detail": "明细",
+    "multi.detail": "单榜 b",
     "multi.locked": "锁定 ",
     "error.range": "{label} 必须在 {min} 到 {max} 之间",
     "error.numberList": "{label} 至少需要一个数值",
@@ -263,9 +263,9 @@ const I18N = {
     "reason.palindrome": "{value} palindrome (+{points})",
     "reason.sequence": "{value} sequence (+{points})",
     "reason.ending": "Ending {value} (+{points})",
-    "reason.overlap": "{left}+{right} forms {fused}, saving {overlap} digit(s) (+{points})",
+    "reason.ruleHit": "Rule hit {pattern} (+{points})",
     "empty.beauty": "No obvious digit highlights",
-    "empty.control": "No overlap merge",
+    "empty.control": "No rule hits",
     "empty.noCandidate": "No combined candidates reached the threshold in this window",
     "empty.noHardRuleB": "No b value matched the hard rules",
     "empty.noMultiPlan": "No combination matched the total rules",
@@ -275,14 +275,14 @@ const I18N = {
     "cell.increment": "Increment",
     "cell.singleB": "Single b",
     "cell.totalA": "Total a",
-    "cell.control": "Control fit",
+    "cell.control": "Rule hits",
     "cell.beauty": "Score evaluation",
     "table.total": "Combined",
     "multi.card": "Combination {index}",
     "multi.totalIncrement": "Total increment",
-    "multi.control": "b control",
+    "multi.control": "b score evaluation",
     "multi.beauty": "a score",
-    "multi.detail": "Details",
+    "multi.detail": "Single b",
     "multi.locked": "Locked ",
     "error.range": "{label} must be between {min} and {max}",
     "error.numberList": "{label} needs at least one value",
@@ -614,51 +614,28 @@ function matchedRulePatterns(value, rule) {
   return patterns;
 }
 
-function bestOverlap(left, right) {
-  const maxOverlap = Math.min(left.length, right.length);
-
-  for (let size = maxOverlap; size > 0; size -= 1) {
-    if (left.endsWith(right.slice(0, size))) {
-      return size;
-    }
-  }
-
-  return 0;
-}
-
 function evaluateControlFit(value, rule) {
-  const text = String(value);
   const patterns = matchedRulePatterns(value, rule);
   let score = 0;
   const reasons = [];
-  const counted = new Set();
 
-  for (const left of patterns) {
-    for (const right of patterns) {
-      if (left === right) {
-        continue;
-      }
-
-      const overlap = bestOverlap(left, right);
-      if (!overlap) {
-        continue;
-      }
-
-      const fused = left + right.slice(overlap);
-      const key = `${left}|${right}|${fused}`;
-
-      if (!text.includes(fused) || counted.has(key)) {
-        continue;
-      }
-
-      counted.add(key);
-      const points = overlap * 18;
-      score += points;
-      reasons.push(t("reason.overlap", { left, right, fused, overlap, points }));
-    }
+  for (const pattern of patterns) {
+    const points = DEFAULT_PATTERN_WEIGHTS.get(pattern) ?? Math.max(8, pattern.length * 6);
+    score += points;
+    reasons.push(t("reason.ruleHit", { pattern, points }));
   }
 
   return { score, reasons };
+}
+
+function evaluateLineScore(value, rule) {
+  const beauty = evaluateBeauty(value);
+  const control = evaluateControlFit(value, rule);
+
+  return {
+    score: beauty.score + control.score,
+    reasons: [...beauty.reasons, ...control.reasons],
+  };
 }
 
 function planScore(plan) {
@@ -994,7 +971,7 @@ async function generateLineCandidates(config, maxCandidates, onProgress) {
         name: config.name,
         increment,
         value,
-        control: evaluateControlFit(value, config.rule),
+        control: evaluateLineScore(value, config.rule),
         locked: true,
       });
 
@@ -1015,7 +992,7 @@ async function generateLineCandidates(config, maxCandidates, onProgress) {
         name: config.name,
         increment: value - config.current,
         value,
-        control: evaluateControlFit(value, config.rule),
+        control: evaluateLineScore(value, config.rule),
       });
 
       if (candidates.length >= maxCandidates) {
@@ -1112,12 +1089,11 @@ function renderMultiResults(plans) {
     );
     card.append(header);
 
+    const lineScoreReasons = plan.lines.flatMap((line) => line.control.reasons);
     const grid = createElement("div", "plan-grid");
     const cells = [
       [t("multi.totalIncrement"), formatNumber(plan.totalIncrement), "accent"],
       [t("cell.totalA"), formatNumber(plan.totalValue), ""],
-      [t("multi.control"), String(plan.controlScore), ""],
-      [t("multi.beauty"), `${plan.beauty.score} / ${formatReasons(plan.beauty.reasons)}`, ""],
       [
         t("multi.detail"),
         plan.lines
@@ -1125,9 +1101,11 @@ function renderMultiResults(plans) {
             const lockLabel = line.locked ? t("multi.locked") : "";
             return `${line.name}: ${lockLabel}${formatNumber(line.value)} (+${formatNumber(line.increment)})`;
           })
-          .join(currentLanguage === "zh" ? "；" : "; "),
-        "",
+          .join("\n"),
+        "line-detail",
       ],
+      [t("multi.beauty"), `${plan.beauty.score} / ${formatReasons(plan.beauty.reasons)}`, ""],
+      [t("multi.control"), `${plan.controlScore} / ${formatReasons(lineScoreReasons)}`, ""],
     ];
 
     for (const [label, value, className] of cells) {

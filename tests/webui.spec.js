@@ -18,7 +18,8 @@ test("single-score search renders default control results", async ({ page }) => 
 
   await expect(page.getByText("完成 1 档")).toBeVisible({ timeout: 15000 });
   await expect(page.getByText("6,008,123")).toBeVisible();
-  await expect(page.getByText("812+123 拼成 8123").first()).toBeVisible();
+  await expect(page.getByText("命中规则 123").first()).toBeVisible();
+  await expect(page.getByText("命中规则 812").first()).toBeVisible();
 });
 
 test("single-score exact match locks final b outside the search window", async ({ page }) => {
@@ -161,6 +162,13 @@ test("multi-score locked b uses current value as a constant", async ({ page }) =
   await expect(page.getByText("完成 1 组")).toBeVisible({ timeout: 15000 });
   await expect(page.getByText("b1: 锁定 6,001,234 (+0)")).toBeVisible();
   await expect(page.getByText("b2: 锁定 1,000 (+0)")).toBeVisible();
+
+  const cells = page.locator("#multi-results .result-card").first().locator(".plan-cell");
+  await expect(cells.nth(2).locator("strong")).toHaveText("单榜 b");
+  await expect(cells.nth(2).locator("span")).toHaveText(/b1: 锁定 6,001,234 \(\+0\)\nb2: 锁定 1,000 \(\+0\)/);
+  await expect(cells.nth(4).locator("strong")).toHaveText("b 分数评价");
+  await expect(cells.nth(4).locator("span")).toContainText("49 /");
+  await expect(cells.nth(4).locator("span")).toContainText("包含 123");
 });
 
 test("language switch renders English labels and tooltips", async ({ page }) => {
